@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Filament\Resources\TransactionResource\Pages;
+
+use App\Filament\Resources\TransactionResource;
+use Filament\Actions;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateTransaction extends CreateRecord
+{
+    protected static string $resource = TransactionResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        // Generate transaction ID if not provided
+        if (empty($data['transaction_id'])) {
+            $data['transaction_id'] = 'TXN-' . date('Ymd') . '-' . str_pad(
+                \App\Models\Transaction::whereDate('created_at', today())->count() + 1,
+                3,
+                '0',
+                STR_PAD_LEFT
+            );
+        }
+
+        return $data;
+    }
+}
