@@ -12,6 +12,12 @@ use Carbon\Carbon;
 
 class BookingStatsWidget extends BaseWidget
 {
+    // Keep at the top as it shows key metrics
+    protected static ?int $sort = 1;
+    
+    // Set column span to full width (non-static to match parent class)
+    protected int | string | array $columnSpan = 'full';
+    
     protected function getStats(): array
     {
         // Get current month and previous month data

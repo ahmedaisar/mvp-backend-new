@@ -157,7 +157,8 @@ class ResortResource extends Resource
                                 Forms\Components\Section::make('Resort Amenities')
                                     ->schema([
                                         Forms\Components\CheckboxList::make('amenities')
-                                            ->relationship('amenities', 'name')
+                                            ->relationship('amenities')
+                                            ->getOptionLabelFromRecordUsing(fn (Amenity $record) => $record->name ?? $record->code ?? "Amenity #{$record->id}")
                                             ->columns(3)
                                             ->searchable(),
                                     ]),
@@ -558,5 +559,10 @@ class ResortResource extends Resource
             'view' => Pages\ViewResort::route('/{record}'),
             'edit' => Pages\EditResort::route('/{record}/edit'),
         ];
+    }
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }

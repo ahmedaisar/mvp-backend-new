@@ -1,0 +1,132 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Inventory;
+use App\Models\RatePlan;
+use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class InventorySeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // Clear existing inventory to avoid conflicts
+        DB::table('inventories')->truncate();
+        
+        // Get all rate plans
+        $ratePlans = RatePlan::all();
+        
+        // Create inventory for next 365 days for each rate plan
+        $startDate = Carbon::today();
+        $endDate = Carbon::today()->addDays(365);
+        
+        foreach ($ratePlans as $ratePlan) {
+            $this->command->info("Creating inventory for rate plan: {$ratePlan->id} - {$ratePlan->name}");
+            
+            // Create inventory entries in 30-day chunks
+            $chunkStartDate = $startDate->copy();
+            
+            while ($chunkStartDate < $endDate) {
+                $chunkEndDate = $chunkStartDate->copy()->addDays(29); // Use 29 to avoid overlap
+                if ($chunkEndDate > $endDate) {
+                    $chunkEndDate = $endDate->copy();
+                }
+                
+                // Create inventory entry for this chunk
+                Inventory::create([
+                    'rate_plan_id' => $ratePlan->id,
+                    'start_date' => $chunkStartDate->format('Y-m-d'),
+                    'end_date' => $chunkEndDate->format('Y-m-d'),
+                    'available_rooms' => rand(1, 10),
+                    'blocked' => false,
+                ]);
+                
+                // Move to next chunk - ensure no overlap
+                $chunkStartDate = $chunkEndDate->copy()->addDay();
+            }
+            
+            // Add a few blocked date ranges (e.g., maintenance periods, fully booked periods)
+            $this->createBlockedPeriods($ratePlan->id, $startDate, $endDate);
+        }
+    }
+    
+    /**
+     * Create random blocked periods for a rate plan
+     *
+     * @param int $ratePlanId
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     */
+    private function createBlockedPeriods(int $ratePlanId, Carbon $startDate, Carbon $endDate): void
+    {
+        // Create 1-3 blocked periods
+        $numBlockedPeriods = rand(1, 3);
+        
+        // Get all existing inventory dates for this rate plan
+        $existingInventories = Inventory::where('rate_plan_id', $ratePlanId)->get();
+        $existingDateRanges = [];
+        
+        foreach ($existingInventories as $inventory) {
+            $existingDateRanges[] = [
+                'start' => $inventory->start_date->toDateString(),
+                'end' => $inventory->end_date->toDateString()
+            ];
+        }
+        
+        for ($i = 0; $i < $numBlockedPeriods; $i++) {
+            // Random period between 2-4 days (shorter to avoid conflicts)
+            $periodLength = rand(2, 4);
+            
+            // Random start date at least 60 days in the future
+            $minStartOffset = 60;
+            $maxStartOffset = $endDate->diffInDays($startDate) - $periodLength - 30; // Keep away from end
+            
+            if ($maxStartOffset <= $minStartOffset) {
+                continue; // Skip if there's not enough days left
+            }
+            
+            $randomStartOffset = rand($minStartOffset, $maxStartOffset);
+            $blockStartDate = $startDate->copy()->addDays($randomStartOffset);
+            $blockEndDate = $blockStartDate->copy()->addDays($periodLength);
+            
+            // Check for overlaps with existing inventory entries
+            $overlaps = false;
+            foreach ($existingDateRanges as $range) {
+                if (
+                    ($blockStartDate->toDateString() <= $range['end'] && $blockEndDate->toDateString() >= $range['start']) ||
+                    ($blockStartDate->toDateString() >= $range['start'] && $blockStartDate->toDateString() <= $range['end']) ||
+                    ($blockEndDate->toDateString() >= $range['start'] && $blockEndDate->toDateString() <= $range['end'])
+                ) {
+                    $overlaps = true;
+                    break;
+                }
+            }
+            
+            if (!$overlaps) {
+                try {
+                    Inventory::create([
+                        'rate_plan_id' => $ratePlanId,
+                        'start_date' => $blockStartDate->format('Y-m-d'),
+                        'end_date' => $blockEndDate->format('Y-m-d'),
+                        'available_rooms' => 0,
+                        'blocked' => true,
+                    ]);
+                    
+                    // Add to our list of existing date ranges to check future overlaps
+                    $existingDateRanges[] = [
+                        'start' => $blockStartDate->toDateString(),
+                        'end' => $blockEndDate->toDateString()
+                    ];
+                } catch (\Exception $e) {
+                    // If there's a constraint violation, just skip this one
+                    $this->command->info("Skipping blocked period due to overlap: {$e->getMessage()}");
+                }
+            }
+        }
+    }
+}

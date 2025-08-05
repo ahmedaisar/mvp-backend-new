@@ -12,6 +12,9 @@ class CommissionAnalyticsWidget extends BaseWidget
 {
     protected static ?int $sort = 7;
     
+    // Set a consistent column span for card widgets
+    protected int | string | array $columnSpan = 'full';
+    
     protected function getStats(): array
     {
         $currentMonth = now()->startOfMonth();

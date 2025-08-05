@@ -13,27 +13,31 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // 1. Base configuration and lookup data
+            RolePermissionSeeder::class,
             SiteSettingsSeeder::class,
             AmenitiesSeeder::class,
             CommunicationTemplatesSeeder::class,
+            
+            // 2. Core business entities
             ResortsSeeder::class,
             RoomTypesSeeder::class,
             RatePlansSeeder::class,
+            
+            // 3. Pricing and availability
             SeasonalRatesSeeder::class,
-        ]);
-
-        // Create admin user
-        \App\Models\User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@mvp-grock-ota.com',
-            'role' => 'admin',
-        ]);
-
-        // Create sample resort manager
-        \App\Models\User::factory()->create([
-            'name' => 'Resort Manager',
-            'email' => 'manager@mvp-grock-ota.com',
-            'role' => 'resort_manager',
+            InventorySeeder::class,
+            
+            // 4. Supporting entities
+            PromotionsSeeder::class,
+            TransfersSeeder::class,
+            GuestProfilesSeeder::class,
+            
+            // 5. Transactions and bookings (depends on all above)
+            BookingsSeeder::class,
+            
+            // 6. Admin users (should be created after roles)
+            AdminUserSeeder::class
         ]);
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->json('description')->nullable(); // translatable field
             $table->tinyInteger('star_rating')->unsigned()->default(5);
             $table->json('tax_rules')->nullable(); // e.g., {"gst": 8, "service_fee": 12}
-            $table->string('currency', 3)->default('MVR');
+            $table->string('currency', 3)->default('USD');
             $table->string('featured_image')->nullable();
             $table->boolean('active')->default(true);
             $table->softDeletes();

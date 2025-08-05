@@ -10,7 +10,13 @@ class ResortPerformanceWidget extends ChartWidget
 {
     protected static ?string $heading = 'Resort Performance - Revenue Comparison';
     
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
+    
+    // Full width for bar chart
+    protected string | int | array $columnSpan = 'full';
+    
+    // Set a consistent height for bar charts
+    protected static ?int $contentHeight = 300;
     
     protected function getData(): array
     {

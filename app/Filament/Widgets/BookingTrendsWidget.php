@@ -12,6 +12,12 @@ class BookingTrendsWidget extends ChartWidget
     
     protected static ?int $sort = 3;
     
+    // Full width for larger chart - non-static to match parent
+    protected string | int | array $columnSpan = 'full';
+    
+    // Set a consistent height for charts
+    protected static ?int $contentHeight = 300;
+    
     public ?string $filter = '30';
     
     protected function getData(): array

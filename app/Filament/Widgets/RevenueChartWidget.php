@@ -11,7 +11,13 @@ class RevenueChartWidget extends ChartWidget
 {
     protected static ?string $heading = 'Revenue by Resort';
     
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 4;
+    
+    // Half width to display side by side with another chart
+    protected string | int | array $columnSpan = 2;
+    
+    // Set a consistent height for pie/doughnut charts
+    protected static ?int $contentHeight = 300;
     
     protected function getData(): array
     {

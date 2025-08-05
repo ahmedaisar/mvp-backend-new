@@ -88,9 +88,7 @@ class ResortsSeeder extends Seeder
             $resort->coordinates = $resortData['coordinates'];
             $resort->contact_email = $resortData['contact_email'];
             $resort->contact_phone = $resortData['contact_phone'];
-            $resort->description = [
-                'en' => 'Experience the ultimate tropical paradise at ' . $resortData['name'] . '. Nestled in the stunning ' . $resortData['atoll'] . ' of the Maldives, our resort offers pristine beaches, crystal-clear waters, and world-class amenities. Perfect for honeymoons, family vacations, or a luxurious getaway, our resort promises an unforgettable experience in one of the most beautiful destinations on Earth. Enjoy water sports, spa treatments, fine dining, and more in this idyllic setting surrounded by the Indian Ocean.'
-            ];
+            $resort->description = 'Experience the ultimate tropical paradise at ' . $resortData['name'] . '. Nestled in the stunning ' . $resortData['atoll'] . ' of the Maldives, our resort offers pristine beaches, crystal-clear waters, and world-class amenities. Perfect for honeymoons, family vacations, or a luxurious getaway, our resort promises an unforgettable experience in one of the most beautiful destinations on Earth. Enjoy water sports, spa treatments, fine dining, and more in this idyllic setting surrounded by the Indian Ocean.';
             $resort->star_rating = $resortData['star_rating'];
             $resort->resort_type = $resortData['resort_type'];
             $resort->check_in_time = '14:00:00';

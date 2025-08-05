@@ -11,7 +11,13 @@ class CancellationAnalyticsWidget extends ChartWidget
 {
     protected static ?string $heading = 'Booking Status Distribution';
     
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 4;
+    
+    // Half width to display side by side with Revenue by Resort
+    protected string | int | array $columnSpan = 2;
+    
+    // Set a consistent height for pie/doughnut charts
+    protected static ?int $contentHeight = 300;
     
     public ?string $filter = '30';
     

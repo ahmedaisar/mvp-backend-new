@@ -16,86 +16,50 @@ class RatePlansSeeder extends Seeder
         // Maldives-specific rate plans
         $ratePlans = [
             [
-                'name' => [
-                    'en' => 'Standard Rate',
-                    'ru' => 'Стандартный тариф',
-                    'fr' => 'Tarif standard',
-                ],
+                'name' => 'Standard Rate',
                 'refundable' => true,
                 'breakfast_included' => true,
-                'cancellation_policy' => [
-                    'en' => 'Free cancellation up to 7 days before arrival. Late cancellation or no-show will incur a penalty equal to 1 night stay.',
-                ],
+                'cancellation_policy' => 'Free cancellation up to 7 days before arrival. Late cancellation or no-show will incur a penalty equal to 1 night stay.',
                 'deposit_required' => false,
                 'deposit_percentage' => 0,
             ],
             [
-                'name' => [
-                    'en' => 'Non-Refundable',
-                    'ru' => 'Невозвратный тариф',
-                    'fr' => 'Non remboursable',
-                ],
+                'name' => 'Non-Refundable',
                 'refundable' => false,
                 'breakfast_included' => true,
-                'cancellation_policy' => [
-                    'en' => 'This rate is non-refundable and cannot be changed or cancelled. No refund for no-show or early check-out.',
-                ],
+                'cancellation_policy' => 'This rate is non-refundable and cannot be changed or cancelled. No refund for no-show or early check-out.',
                 'deposit_required' => false,
                 'deposit_percentage' => 0,
             ],
             [
-                'name' => [
-                    'en' => 'All Inclusive',
-                    'ru' => 'Все включено',
-                    'fr' => 'Tout compris',
-                ],
+                'name' => 'All Inclusive',
                 'refundable' => true,
                 'breakfast_included' => true,
-                'cancellation_policy' => [
-                    'en' => 'Free cancellation up to 14 days before arrival. Late cancellation or no-show will incur a penalty equal to 2 nights stay.',
-                ],
+                'cancellation_policy' => 'Free cancellation up to 14 days before arrival. Late cancellation or no-show will incur a penalty equal to 2 nights stay.',
                 'deposit_required' => true,
                 'deposit_percentage' => 20,
             ],
             [
-                'name' => [
-                    'en' => 'Half Board',
-                    'ru' => 'Полупансион',
-                    'fr' => 'Demi-pension',
-                ],
+                'name' => 'Half Board',
                 'refundable' => true,
                 'breakfast_included' => true,
-                'cancellation_policy' => [
-                    'en' => 'Free cancellation up to 7 days before arrival. Late cancellation or no-show will incur a penalty equal to 1 night stay.',
-                ],
+                'cancellation_policy' => 'Free cancellation up to 7 days before arrival. Late cancellation or no-show will incur a penalty equal to 1 night stay.',
                 'deposit_required' => false,
                 'deposit_percentage' => 0,
             ],
             [
-                'name' => [
-                    'en' => 'Full Board',
-                    'ru' => 'Полный пансион',
-                    'fr' => 'Pension complète',
-                ],
+                'name' => 'Full Board',
                 'refundable' => true,
                 'breakfast_included' => true,
-                'cancellation_policy' => [
-                    'en' => 'Free cancellation up to 10 days before arrival. Late cancellation or no-show will incur a penalty equal to 1 night stay.',
-                ],
+                'cancellation_policy' => 'Free cancellation up to 10 days before arrival. Late cancellation or no-show will incur a penalty equal to 1 night stay.',
                 'deposit_required' => true,
                 'deposit_percentage' => 15,
             ],
             [
-                'name' => [
-                    'en' => 'Honeymoon Package',
-                    'ru' => 'Медовый месяц',
-                    'fr' => 'Forfait lune de miel',
-                ],
+                'name' => 'Honeymoon Package',
                 'refundable' => true,
                 'breakfast_included' => true,
-                'cancellation_policy' => [
-                    'en' => 'Free cancellation up to 30 days before arrival. Late cancellation or no-show will incur a penalty equal to 2 nights stay.',
-                ],
+                'cancellation_policy' => 'Free cancellation up to 30 days before arrival. Late cancellation or no-show will incur a penalty equal to 2 nights stay.',
                 'deposit_required' => true,
                 'deposit_percentage' => 30,
             ],

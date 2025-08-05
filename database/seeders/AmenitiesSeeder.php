@@ -17,212 +17,153 @@ class AmenitiesSeeder extends Seeder
             // Resort Facilities
             [
                 'code' => 'wifi',
-                'name' => [
-                    'en' => 'Free Wi-Fi',
-                    'ru' => 'Бесплатный Wi-Fi',
-                    'fr' => 'Wi-Fi gratuit',
-                ],
+                'name' => 'Free Wi-Fi',
                 'icon' => 'fas fa-wifi',
                 'category' => 'connectivity',
                 'active' => true,
             ],
             [
                 'code' => 'pool',
-                'name' => [
-                    'en' => 'Swimming Pool',
-                    'ru' => 'Бассейн',
-                    'fr' => 'Piscine',
-                ],
+                'name' => 'Swimming Pool',
                 'icon' => 'fas fa-swimming-pool',
                 'category' => 'recreation',
+                'active' => true,
             ],
             [
                 'code' => 'spa',
-                'name' => [
-                    'en' => 'Spa & Wellness',
-                    'ru' => 'Спа и оздоровление',
-                    'fr' => 'Spa et bien-être',
-                ],
+                'name' => 'Spa & Wellness',
                 'icon' => 'fas fa-spa',
                 'category' => 'wellness',
+                'active' => true,
             ],
             [
                 'code' => 'restaurant',
-                'name' => [
-                    'en' => 'Restaurant',
-                    'ru' => 'Ресторан',
-                    'fr' => 'Restaurant',
-                ],
+                'name' => 'Restaurant',
                 'icon' => 'fas fa-utensils',
                 'category' => 'dining',
+                'active' => true,
             ],
             [
                 'code' => 'bar',
-                'name' => [
-                    'en' => 'Bar',
-                    'ru' => 'Бар',
-                    'fr' => 'Bar',
-                ],
+                'name' => 'Bar',
                 'icon' => 'fas fa-cocktail',
                 'category' => 'dining',
+                'active' => true,
             ],
             [
                 'code' => 'gym',
-                'name' => [
-                    'en' => 'Fitness Center',
-                    'ru' => 'Фитнес-центр',
-                    'fr' => 'Centre de fitness',
-                ],
+                'name' => 'Fitness Center',
                 'icon' => 'fas fa-dumbbell',
                 'category' => 'recreation',
+                'active' => true,
             ],
             [
                 'code' => 'diving',
-                'name' => [
-                    'en' => 'Diving Center',
-                    'ru' => 'Дайвинг-центр',
-                    'fr' => 'Centre de plongée',
-                ],
+                'name' => 'Diving Center',
                 'icon' => 'fas fa-swimmer',
                 'category' => 'activities',
+                'active' => true,
             ],
             [
                 'code' => 'snorkeling',
-                'name' => [
-                    'en' => 'Snorkeling',
-                    'ru' => 'Сноркелинг',
-                    'fr' => 'Plongée avec tuba',
-                ],
+                'name' => 'Snorkeling',
                 'icon' => 'fas fa-mask',
                 'category' => 'activities',
+                'active' => true,
             ],
             [
                 'code' => 'water_sports',
-                'name' => [
-                    'en' => 'Water Sports',
-                    'ru' => 'Водные виды спорта',
-                    'fr' => 'Sports nautiques',
-                ],
+                'name' => 'Water Sports',
                 'icon' => 'fas fa-water',
                 'category' => 'activities',
+                'active' => true,
             ],
             [
                 'code' => 'kids_club',
-                'name' => [
-                    'en' => 'Kids Club',
-                    'ru' => 'Детский клуб',
-                    'fr' => 'Club enfants',
-                ],
+                'name' => 'Kids Club',
                 'icon' => 'fas fa-child',
                 'category' => 'family',
+                'active' => true,
             ],
             
             // Room Amenities
             [
                 'code' => 'ac',
-                'name' => [
-                    'en' => 'Air Conditioning',
-                    'ru' => 'Кондиционер',
-                    'fr' => 'Climatisation',
-                ],
+                'name' => 'Air Conditioning',
                 'icon' => 'fas fa-snowflake',
                 'category' => 'comfort',
+                'active' => true,
             ],
             [
                 'code' => 'minibar',
-                'name' => [
-                    'en' => 'Mini Bar',
-                    'ru' => 'Мини-бар',
-                    'fr' => 'Mini-bar',
-                ],
+                'name' => 'Mini Bar',
                 'icon' => 'fas fa-wine-bottle',
                 'category' => 'comfort',
+                'active' => true,
             ],
             [
                 'code' => 'balcony',
-                'name' => [
-                    'en' => 'Private Balcony',
-                    'ru' => 'Частный балкон',
-                    'fr' => 'Balcon privé',
-                ],
+                'name' => 'Private Balcony',
                 'icon' => 'fas fa-building',
                 'category' => 'comfort',
+                'active' => true,
             ],
             [
                 'code' => 'ocean_view',
-                'name' => [
-                    'en' => 'Ocean View',
-                    'ru' => 'Вид на океан',
-                    'fr' => 'Vue sur océan',
-                ],
+                'name' => 'Ocean View',
                 'icon' => 'fas fa-water',
                 'category' => 'view',
+                'active' => true,
             ],
             [
                 'code' => 'beach_access',
-                'name' => [
-                    'en' => 'Direct Beach Access',
-                    'ru' => 'Прямой доступ к пляжу',
-                    'fr' => 'Accès direct à la plage',
-                ],
+                'name' => 'Direct Beach Access',
                 'icon' => 'fas fa-umbrella-beach',
                 'category' => 'location',
+                'active' => true,
             ],
             [
                 'code' => 'coffee_maker',
-                'name' => [
-                    'en' => 'Coffee/Tea Maker',
-                    'ru' => 'Кофеварка/чайник',
-                    'fr' => 'Machine à café/thé',
-                ],
+                'name' => 'Coffee/Tea Maker',
                 'icon' => 'fas fa-coffee',
                 'category' => 'comfort',
+                'active' => true,
             ],
             [
                 'code' => 'safe',
-                'name' => [
-                    'en' => 'In-room Safe',
-                    'ru' => 'Сейф в номере',
-                    'fr' => 'Coffre-fort',
-                ],
+                'name' => 'In-room Safe',
                 'icon' => 'fas fa-lock',
                 'category' => 'security',
+                'active' => true,
             ],
             [
                 'code' => 'tv',
-                'name' => [
-                    'en' => 'Flat Screen TV',
-                    'ru' => 'Плоский телевизор',
-                    'fr' => 'TV écran plat',
-                ],
+                'name' => 'Flat Screen TV',
                 'icon' => 'fas fa-tv',
                 'category' => 'entertainment',
+                'active' => true,
             ],
             [
                 'code' => 'room_service',
-                'name' => [
-                    'en' => '24h Room Service',
-                    'ru' => 'Круглосуточное обслуживание номеров',
-                    'fr' => 'Service chambre 24h',
-                ],
+                'name' => '24h Room Service',
                 'icon' => 'fas fa-concierge-bell',
                 'category' => 'service',
+                'active' => true,
             ],
             [
                 'code' => 'jacuzzi',
-                'name' => [
-                    'en' => 'Private Jacuzzi',
-                    'ru' => 'Частное джакузи',
-                    'fr' => 'Jacuzzi privé',
-                ],
+                'name' => 'Private Jacuzzi',
                 'icon' => 'fas fa-hot-tub',
                 'category' => 'luxury',
+                'active' => true,
             ],
         ];
 
         foreach ($amenities as $amenity) {
-            // Ensure all amenities are active by default
-            $amenity['active'] = true;
+            // All amenities should be active
+            if (!isset($amenity['active'])) {
+                $amenity['active'] = true;
+            }
             Amenity::create($amenity);
         }
     }

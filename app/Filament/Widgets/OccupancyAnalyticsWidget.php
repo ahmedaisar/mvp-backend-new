@@ -13,7 +13,10 @@ use Carbon\CarbonPeriod;
 
 class OccupancyAnalyticsWidget extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 2;
+    
+    // Set column span to full width (non-static to match parent class)
+    protected int | string | array $columnSpan = 'full';
     
     public ?string $filter = '30';
     

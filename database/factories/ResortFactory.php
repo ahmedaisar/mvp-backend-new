@@ -33,9 +33,7 @@ class ResortFactory extends Factory
             'coordinates' => $this->faker->latitude(3.0, 7.0) . ',' . $this->faker->longitude(72.0, 74.0),
             'contact_email' => $this->faker->companyEmail(),
             'contact_phone' => '+960-' . $this->faker->numerify('###-####'),
-            'description' => [
-                'en' => $this->faker->paragraphs(3, true)
-            ],
+            'description' => $this->faker->paragraphs(3, true),
             'star_rating' => $this->faker->numberBetween(3, 5),
             'tax_rules' => [
                 'gst' => $this->faker->numberBetween(8, 12),

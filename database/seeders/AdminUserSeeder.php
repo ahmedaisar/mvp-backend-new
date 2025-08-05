@@ -15,23 +15,23 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // Create admin user
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@mvpgrock.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        // $admin = User::create([
+        //     'name' => 'Admin User',
+        //     'email' => 'admin@atolldiscovery.com',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password'),
+        //     'role' => 'admin',
+        // ]);
 
-        // Assign super admin role
-        $admin->assignRole('super_admin');
+        // // Assign super admin role
+        // $admin->assignRole('super_admin');
 
         // Create resort manager user
         $resortManager = User::create([
             'name' => 'Resort Manager',
-            'email' => 'manager@mvpgrock.com',
+            'email' => 'manager@atolldiscovery.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('manager'),
             'role' => 'resort_manager',
         ]);
 
@@ -40,12 +40,23 @@ class AdminUserSeeder extends Seeder
         // Create booking agent user (using agency_operator role from enum)
         $bookingAgent = User::create([
             'name' => 'Booking Agent',
-            'email' => 'agent@mvpgrock.com',
+            'email' => 'agent@atolldiscovery.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('agency'),
             'role' => 'agency_operator',
         ]);
 
         $bookingAgent->assignRole('booking_agent');
+
+        // Create booking agent user (using agency_operator role from enum)
+        $bookingAgent = User::create([
+            'name' => 'Traveler',
+            'email' => 'traveler@atolldiscovery.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('traveler'),
+            'role' => 'customer_service',
+        ]);
+
+        $bookingAgent->assignRole('customer_service');
     }
 }

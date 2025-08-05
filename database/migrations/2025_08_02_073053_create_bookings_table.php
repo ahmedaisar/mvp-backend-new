@@ -24,8 +24,8 @@ return new class extends Migration
             $table->integer('nights')->unsigned();
             $table->tinyInteger('adults')->unsigned()->default(2);
             $table->tinyInteger('children')->unsigned()->default(0);
-            $table->decimal('subtotal_mvr', 12, 2); // room cost in MVR
-            $table->decimal('total_price_usd', 12, 2); // total including taxes/fees in MVR
+            $table->decimal('subtotal_usd', 12, 2); // room cost in USD
+            $table->decimal('total_price_usd', 12, 2); // total including taxes/fees in USD
             $table->decimal('currency_rate_usd', 8, 4)->default(1); // USD exchange rate
             $table->foreignId('promotion_id')->nullable()->constrained()->onDelete('set null');
             $table->decimal('discount_amount', 10, 2)->default(0);

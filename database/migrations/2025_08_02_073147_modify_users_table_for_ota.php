@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['admin', 'resort_manager', 'agency_operator'])->default('agency_operator');
+            $table->enum('role', ['admin', 'resort_manager', 'agency_operator', 'customer_service'])->default('customer_service');
             $table->string('2fa_secret')->nullable();
             $table->softDeletes();
         });

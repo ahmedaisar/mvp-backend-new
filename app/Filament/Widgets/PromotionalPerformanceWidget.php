@@ -13,6 +13,12 @@ class PromotionalPerformanceWidget extends ChartWidget
     
     protected static ?int $sort = 6;
     
+    // Full width for this complex chart with multiple axes
+    protected string | int | array $columnSpan = 'full';
+    
+    // Set a consistent height for bar charts
+    protected static ?int $contentHeight = 300;
+    
     protected function getData(): array
     {
         // Get promotion usage data for current month

@@ -19,66 +19,42 @@ class RoomTypesSeeder extends Seeder
             // Common room types for Maldives resorts
             [
                 'code' => 'BV',
-                'name' => [
-                    'en' => 'Beach Villa',
-                    'ru' => 'Пляжная вилла',
-                    'fr' => 'Villa sur la plage',
-                ],
+                'name' => 'Beach Villa',
                 'capacity_adults' => 2,
                 'capacity_children' => 1,
                 'default_price' => 350,
             ],
             [
                 'code' => 'WV',
-                'name' => [
-                    'en' => 'Water Villa',
-                    'ru' => 'Водная вилла',
-                    'fr' => 'Villa sur l\'eau',
-                ],
+                'name' => 'Water Villa',
                 'capacity_adults' => 2,
                 'capacity_children' => 1,
                 'default_price' => 450,
             ],
             [
                 'code' => 'PV',
-                'name' => [
-                    'en' => 'Pool Villa',
-                    'ru' => 'Вилла с бассейном',
-                    'fr' => 'Villa avec piscine',
-                ],
+                'name' => 'Pool Villa',
                 'capacity_adults' => 2,
                 'capacity_children' => 2,
                 'default_price' => 550,
             ],
             [
                 'code' => 'FBV',
-                'name' => [
-                    'en' => 'Family Beach Villa',
-                    'ru' => 'Семейная пляжная вилла',
-                    'fr' => 'Villa familiale sur la plage',
-                ],
+                'name' => 'Family Beach Villa',
                 'capacity_adults' => 4,
                 'capacity_children' => 2,
                 'default_price' => 650,
             ],
             [
                 'code' => 'SWV',
-                'name' => [
-                    'en' => 'Sunset Water Villa',
-                    'ru' => 'Водная вилла с видом на закат',
-                    'fr' => 'Villa sur l\'eau avec vue sur le coucher de soleil',
-                ],
+                'name' => 'Sunset Water Villa',
                 'capacity_adults' => 2,
                 'capacity_children' => 1,
                 'default_price' => 800,
             ],
             [
                 'code' => 'OWB',
-                'name' => [
-                    'en' => 'Overwater Bungalow',
-                    'ru' => 'Бунгало над водой',
-                    'fr' => 'Bungalow sur pilotis',
-                ],
+                'name' => 'Overwater Bungalow',
                 'capacity_adults' => 2,
                 'capacity_children' => 1,
                 'default_price' => 700,
