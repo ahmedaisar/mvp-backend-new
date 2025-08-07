@@ -169,11 +169,6 @@ class Booking extends Model
         return $this->total_price_usd;
     }
 
-    public function getSubtotalUsdAttribute()
-    {
-        return $this->subtotal_usd;
-    }
-
     public function getStatusBadgeAttribute()
     {
         $colors = [

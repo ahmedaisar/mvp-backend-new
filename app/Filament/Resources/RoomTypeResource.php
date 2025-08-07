@@ -162,6 +162,17 @@ class RoomTypeResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('duplicate')
+                    ->label('Duplicate')
+                    ->icon('heroicon-m-square-2-stack')
+                    ->color('gray')
+                    ->action(function (RoomType $record): void {
+                        $newRoomType = $record->replicate();
+                        $newRoomType->name = $record->name . ' (Copy)';
+                        $newRoomType->code = $record->code . '_COPY';
+                        $newRoomType->active = false;
+                        $newRoomType->save();
+                    }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

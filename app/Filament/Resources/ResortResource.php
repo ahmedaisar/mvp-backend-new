@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Support\Enums\FontWeight;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\FileUpload;
 
 class ResortResource extends Resource
 {
@@ -185,29 +185,18 @@ class ResortResource extends Resource
                             ->schema([
                                 Forms\Components\Section::make('Resort Images')
                                     ->schema([
-                                        SpatieMediaLibraryFileUpload::make('featured_image')
+                                        FileUpload::make('featured_image')
                                             ->label('Featured Image')
-                                            ->collection('featured')
-                                            ->image()
-                                            ->imageEditor()
-                                            ->imageCropAspectRatio('16:9')
-                                            ->imageResizeTargetWidth('1200')
-                                            ->imageResizeTargetHeight('675')
+                                            ->disk('public')
                                             ->maxFiles(1)
-                                            ->helperText('Main resort image displayed in listings (recommended: 1200x675px)'),
+                                            ->helperText('Main resort image displayed in listings'),
                                             
-                                        SpatieMediaLibraryFileUpload::make('gallery')
+                                        FileUpload::make('gallery')
                                             ->label('Gallery Images')
-                                            ->collection('gallery')
-                                            ->image()
-                                            ->imageEditor()
-                                            ->imageCropAspectRatio('4:3')
-                                            ->imageResizeTargetWidth('800')
-                                            ->imageResizeTargetHeight('600')
+                                            ->disk('public')
                                             ->multiple()
-                                            ->reorderable()
                                             ->maxFiles(25)
-                                            ->helperText('Resort gallery images (recommended: 800x600px, max 25 images)')
+                                            ->helperText('Resort gallery images (up to 25 images)')
                                             ->columnSpanFull(),
                                     ])
                                     ->columns(1),
@@ -236,6 +225,7 @@ class ResortResource extends Resource
                     ->label('Image')
                     ->size(60)
                     ->circular()
+                    ->disk('public')
                     ->defaultImageUrl(url('/images/placeholder.png')),
                     
                 Tables\Columns\TextColumn::make('name')
@@ -359,6 +349,20 @@ class ResortResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('duplicate')
+                    ->label('Duplicate')
+                    ->icon('heroicon-m-square-2-stack')
+                    ->color('gray')
+                    ->action(function (Resort $record): void {
+                        $newResort = $record->replicate();
+                        $newResort->name = $record->name . ' (Copy)';
+                        $newResort->slug = \Illuminate\Support\Str::slug($newResort->name);
+                        $newResort->active = false;
+                        $newResort->save();
+                        
+                        // Copy amenities relationship
+                        $newResort->amenities()->sync($record->amenities->pluck('id'));
+                    }),
                 Tables\Actions\Action::make('toggleStatus')
                     ->label(fn (Resort $record): string => $record->active ? 'Deactivate' : 'Activate')
                     ->icon(fn (Resort $record): string => $record->active ? 'heroicon-m-eye-slash' : 'heroicon-m-eye')
@@ -401,7 +405,8 @@ class ResortResource extends Resource
                                     ->schema([
                                         Infolists\Components\ImageEntry::make('featured_image')
                                             ->hiddenLabel()
-                                            ->size(300),
+                                            ->size(300)
+                                            ->disk('public'),
                                         Infolists\Components\TextEntry::make('name')
                                             ->size(Infolists\Components\TextEntry\TextEntrySize::Large)
                                             ->weight(FontWeight::Bold),
@@ -512,7 +517,8 @@ class ResortResource extends Resource
                                             ->label('Gallery Images')
                                             ->hiddenLabel()
                                             ->size(150)
-                                            ->circular(false),
+                                            ->circular(false)
+                                            ->disk('public'),
                                     ]),
                             ]),
                             

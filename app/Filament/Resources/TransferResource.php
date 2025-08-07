@@ -195,6 +195,16 @@ class TransferResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('duplicate')
+                    ->label('Duplicate')
+                    ->icon('heroicon-m-square-2-stack')
+                    ->color('gray')
+                    ->action(function (Transfer $record): void {
+                        $newTransfer = $record->replicate();
+                        $newTransfer->name = $record->name . ' (Copy)';
+                        $newTransfer->active = false;
+                        $newTransfer->save();
+                    }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

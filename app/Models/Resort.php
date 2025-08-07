@@ -6,13 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Resort extends Model implements HasMedia
+class Resort extends Model
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -58,29 +55,7 @@ class Resort extends Model implements HasMedia
         });
     }
 
-    /**
-     * Media Library Collections
-     */
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('gallery')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
-    }
-
-    public function registerMediaConversions(Media $media = null): void
-    {
-        $this->addMediaConversion('thumb')
-            ->width(300)
-            ->height(200)
-            ->performOnCollections('gallery');
-
-        $this->addMediaConversion('large')
-            ->width(1200)
-            ->height(800)
-            ->performOnCollections('gallery');
-    }
-
-    /**
+        /**
      * Relationships
      */
     public function roomTypes()
@@ -145,20 +120,20 @@ class Resort extends Model implements HasMedia
             return asset('storage/' . $this->featured_image);
         }
         
-        $media = $this->getFirstMedia('gallery');
-        return $media ? $media->getUrl('large') : null;
+        return null;
     }
 
     public function getGalleryImagesAttribute()
     {
-        return $this->getMedia('gallery')->map(function ($media) {
+        if (!$this->gallery || !is_array($this->gallery)) {
+            return [];
+        }
+        
+        return collect($this->gallery)->map(function ($imagePath) {
             return [
-                'id' => $media->id,
-                'url' => $media->getUrl(),
-                'thumb' => $media->getUrl('thumb'),
-                'large' => $media->getUrl('large'),
-                'alt' => $media->name,
+                'url' => asset('storage/' . $imagePath),
+                'path' => $imagePath,
             ];
-        });
+        })->toArray();
     }
 }

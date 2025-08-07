@@ -108,7 +108,7 @@ class PromotionResource extends Resource
                             ->schema([
                                 Forms\Components\DatePicker::make('blackout_dates')
                                     ->label('Blackout Dates')
-                                    ->multiple()
+                                    //->multiple()
                                     ->displayFormat('M j, Y'),
 
                                 Forms\Components\CheckboxList::make('valid_days')

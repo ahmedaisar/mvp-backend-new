@@ -107,10 +107,11 @@ class BookingsSeeder extends Seeder
             $booking->children = rand(0, 2);
             $booking->status = $i % 3 == 0 ? 'pending' : 'confirmed';
             
-            // Set default values to avoid database errors
+            // Initialize required USD fields (will be updated in createBookingItems)
             $booking->subtotal_usd = 0;
             $booking->total_price_usd = 0;
             $booking->currency_rate_usd = 1.0;
+            $booking->discount_amount = 0;
             
             if ($promotion) {
                 $booking->promotion_id = $promotion->id;
@@ -118,6 +119,14 @@ class BookingsSeeder extends Seeder
             
             if ($transfer) {
                 $booking->transfer_id = $transfer->id;
+            }
+            
+            // Randomly assign commission (if any exist)
+            if (rand(0, 3) == 0) { // 25% chance of having commission
+                $commission = \App\Models\Commission::inRandomOrder()->first();
+                if ($commission) {
+                    $booking->commission_id = $commission->id;
+                }
             }
             
             $booking->special_requests = rand(0, 1) ? [
@@ -195,10 +204,11 @@ class BookingsSeeder extends Seeder
             $booking->children = rand(0, 2);
             $booking->status = 'completed';
             
-            // Set default values to avoid database errors
+            // Initialize required USD fields (will be updated in createBookingItems)
             $booking->subtotal_usd = 0;
             $booking->total_price_usd = 0;
             $booking->currency_rate_usd = 1.0;
+            $booking->discount_amount = 0;
             
             if ($promotion) {
                 $booking->promotion_id = $promotion->id;
@@ -206,6 +216,14 @@ class BookingsSeeder extends Seeder
             
             if ($transfer) {
                 $booking->transfer_id = $transfer->id;
+            }
+            
+            // Randomly assign commission (if any exist)
+            if (rand(0, 3) == 0) { // 25% chance of having commission
+                $commission = \App\Models\Commission::inRandomOrder()->first();
+                if ($commission) {
+                    $booking->commission_id = $commission->id;
+                }
             }
             
             $booking->save();
@@ -277,10 +295,11 @@ class BookingsSeeder extends Seeder
                 null
             ]);
             
-            // Set default values to avoid database errors
+            // Initialize required USD fields (will be updated in createBookingItems)
             $booking->subtotal_usd = 0;
             $booking->total_price_usd = 0;
             $booking->currency_rate_usd = 1.0;
+            $booking->discount_amount = 0;
             
             $booking->save();
             
@@ -350,10 +369,11 @@ class BookingsSeeder extends Seeder
             $booking->children = rand(0, 2);
             $booking->status = 'confirmed';
             
-            // Set default values to avoid database errors
+            // Initialize required USD fields (will be updated in createBookingItems)
             $booking->subtotal_usd = 0;
             $booking->total_price_usd = 0;
             $booking->currency_rate_usd = 1.0;
+            $booking->discount_amount = 0;
             
             if ($promotion) {
                 $booking->promotion_id = $promotion->id;
@@ -361,6 +381,14 @@ class BookingsSeeder extends Seeder
             
             if ($transfer) {
                 $booking->transfer_id = $transfer->id;
+            }
+            
+            // Randomly assign commission (if any exist)
+            if (rand(0, 3) == 0) { // 25% chance of having commission
+                $commission = \App\Models\Commission::inRandomOrder()->first();
+                if ($commission) {
+                    $booking->commission_id = $commission->id;
+                }
             }
             
             $booking->special_requests = rand(0, 1) ? [
@@ -381,16 +409,15 @@ class BookingsSeeder extends Seeder
      */
     private function createBookingItems(Booking $booking, RatePlan $ratePlan, ?Transfer $transfer): void
     {
-        // Simplified implementation since we don't have actual seasonal rates in the seeder
+        // Generate a realistic nightly rate for the rate plan
         // In a real application, you would use SeasonalRate::calculateTotalForPeriod
-        
-        $nightlyRate = $ratePlan->base_rate ?? rand(100, 500);
+        $nightlyRate = rand(150, 800); // Random rate between $150-$800 per night
         $roomSubtotal = $nightlyRate * $booking->nights;
         
         // Create room booking item
         BookingItem::create([
             'booking_id' => $booking->id,
-            'item_type' => 'room', // Try a different value that might be in the actual database schema
+            'item_type' => 'room',
             'item_name' => $ratePlan->name . ' - ' . $booking->roomType->name,
             'unit_price' => $nightlyRate,
             'quantity' => $booking->nights,
@@ -408,13 +435,23 @@ class BookingsSeeder extends Seeder
             $discountAmount = $subtotal * $discountRate;
             $subtotal -= $discountAmount;
             
-            $booking->discount_amount = $discountAmount;
+            // Create discount item
+            BookingItem::create([
+                'booking_id' => $booking->id,
+                'item_type' => 'discount',
+                'item_name' => 'Promotion Discount',
+                'unit_price' => -$discountAmount,
+                'quantity' => 1,
+                'total_price' => -$discountAmount,
+                'currency' => 'USD',
+            ]);
         }
         
-        // Use subtotal_usd after currency migration
+        // Update booking subtotal and discount amount
         $booking->subtotal_usd = $subtotal;
+        $booking->discount_amount = $discountAmount;
         
-        // Add taxes (assuming 12% GST + 10% service fee)
+        // Add taxes (12% GST)
         $taxRate = 0.12;
         $taxAmount = $subtotal * $taxRate;
         
@@ -428,6 +465,7 @@ class BookingsSeeder extends Seeder
             'currency' => 'USD',
         ]);
         
+        // Add service fee (10%)
         $serviceFeeRate = 0.10;
         $serviceFeeAmount = $subtotal * $serviceFeeRate;
         
@@ -462,8 +500,9 @@ class BookingsSeeder extends Seeder
             $total += $transferTotal;
         }
         
+        // Update final totals
         $booking->total_price_usd = $total;
-        $booking->currency_rate_usd = 1.0; // Assuming USD is the base currency
+        $booking->currency_rate_usd = 1.0; // USD is the base currency
         $booking->save();
     }
 }

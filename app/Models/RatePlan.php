@@ -33,6 +33,11 @@ class RatePlan extends Model
         'applicable_countries' => 'array',
         'excluded_countries' => 'array',
     ];
+    
+    protected $attributes = [
+        'applicable_countries' => '[]',
+        'excluded_countries' => '[]',
+    ];
 
     /**
      * Relationships
@@ -142,12 +147,96 @@ class RatePlan extends Model
 
     public function getApplicableCountriesCount()
     {
-        return count($this->applicable_countries ?? []);
+        $countries = $this->applicable_countries;
+        
+        if (is_null($countries)) {
+            return 0;
+        }
+        
+        if (is_string($countries) && !in_array($countries, ['', '[]', 'null'])) {
+            return 1; // Single country code like "US"
+        }
+        
+        if (is_array($countries)) {
+            return count($countries);
+        }
+        
+        return 0;
     }
 
     public function getExcludedCountriesCount()
     {
-        return count($this->excluded_countries ?? []);
+        $countries = $this->excluded_countries;
+        
+        if (is_null($countries)) {
+            return 0;
+        }
+        
+        if (is_string($countries) && !in_array($countries, ['', '[]', 'null'])) {
+            return 1; // Single country code like "US"
+        }
+        
+        if (is_array($countries)) {
+            return count($countries);
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Get formatted applicable countries names
+     */
+    public function getApplicableCountriesNames()
+    {
+        $countries = $this->applicable_countries;
+        
+        if (!$countries) {
+            return 'No countries selected';
+        }
+        
+        $countriesList = static::getCountriesList();
+        
+        // Handle string values (single country)
+        if (is_string($countries) && !in_array($countries, ['', '[]', 'null'])) {
+            return $countriesList[$countries] ?? $countries;
+        }
+        
+        // Handle array values
+        if (is_array($countries) && !empty($countries)) {
+            return collect($countries)
+                ->map(fn ($code) => $countriesList[$code] ?? $code)
+                ->join(', ');
+        }
+        
+        return 'No countries selected';
+    }
+
+    /**
+     * Get formatted excluded countries names
+     */
+    public function getExcludedCountriesNames()
+    {
+        $countries = $this->excluded_countries;
+        
+        if (!$countries) {
+            return 'No countries selected';
+        }
+        
+        $countriesList = static::getCountriesList();
+        
+        // Handle string values (single country)
+        if (is_string($countries) && !in_array($countries, ['', '[]', 'null'])) {
+            return $countriesList[$countries] ?? $countries;
+        }
+        
+        // Handle array values
+        if (is_array($countries) && !empty($countries)) {
+            return collect($countries)
+                ->map(fn ($code) => $countriesList[$code] ?? $code)
+                ->join(', ');
+        }
+        
+        return 'No countries selected';
     }
 
     /**
@@ -215,7 +304,7 @@ public static function getCountriesList(): array
         'CD' => 'Congo (Democratic Republic)',
         'CG' => 'Congo (Republic)',
         'CR' => 'Costa Rica',
-        'CI' => "Côte d'Ivoire",
+        'CI' => 'Cote dIvoire',
         'HR' => 'Croatia',
         'CU' => 'Cuba',
         'CY' => 'Cyprus',

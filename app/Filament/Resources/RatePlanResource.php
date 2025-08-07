@@ -75,6 +75,7 @@ class RatePlanResource extends Resource
                             ->maxValue(100)
                             ->visible(fn (Forms\Get $get) => $get('deposit_required'))
                             ->required(fn (Forms\Get $get) => $get('deposit_required'))
+                            ->default(0)
                             ->helperText('Percentage of total booking amount required as deposit'),
                     ])->columns(2),
                     
@@ -118,16 +119,20 @@ class RatePlanResource extends Resource
                             ->options(RatePlan::getCountriesList())
                             ->multiple()
                             ->searchable()
+                            ->preload()
                             ->visible(fn (Forms\Get $get) => $get('country_restriction_type') === 'include_only')
-                            ->helperText('Rate plan will ONLY be available in these countries'),
+                            ->helperText('Rate plan will ONLY be available in these countries')
+                            ->nullable(),
                             
                         Forms\Components\Select::make('excluded_countries')
                             ->label('Excluded Countries')
                             ->options(RatePlan::getCountriesList())
                             ->multiple()
                             ->searchable()
+                            ->preload()
                             ->visible(fn (Forms\Get $get) => $get('country_restriction_type') === 'exclude_only')
-                            ->helperText('Rate plan will NOT be available in these countries'),
+                            ->helperText('Rate plan will NOT be available in these countries')
+                            ->nullable(),
                     ]),
             ]);
     }
@@ -211,20 +216,32 @@ class RatePlanResource extends Resource
                    // ->visible(fn ($record) => $record->country_restriction_type === 'include_only')
                     ->formatStateUsing(fn ($record) => $record->getApplicableCountriesCount() . ' countries')
                     ->tooltip(function ($record) {
-                        if (!$record->applicable_countries || count($record->applicable_countries) === 0) {
+                        $countries = $record->applicable_countries;
+                        
+                        if (!$countries) {
                             return 'No countries selected';
                         }
                         
-                        $countries = collect($record->applicable_countries)
-                            ->map(fn ($code) => RatePlan::getCountriesList()[$code] ?? $code)
-                            ->take(10)
-                            ->join(', ');
-                            
-                        $more = count($record->applicable_countries) > 10 
-                            ? '... and ' . (count($record->applicable_countries) - 10) . ' more' 
-                            : '';
-                            
-                        return $countries . $more;
+                        // Handle string values (single country)
+                        if (is_string($countries) && !in_array($countries, ['', '[]', 'null'])) {
+                            return RatePlan::getCountriesList()[$countries] ?? $countries;
+                        }
+                        
+                        // Handle array values
+                        if (is_array($countries) && !empty($countries)) {
+                            $countryNames = collect($countries)
+                                ->map(fn ($code) => RatePlan::getCountriesList()[$code] ?? $code)
+                                ->take(10)
+                                ->join(', ');
+                                
+                            $more = count($countries) > 10 
+                                ? '... and ' . (count($countries) - 10) . ' more' 
+                                : '';
+                                
+                            return $countryNames . $more;
+                        }
+                        
+                        return 'No countries selected';
                     }),
                     
                 Tables\Columns\TextColumn::make('excluded_countries')
@@ -232,20 +249,32 @@ class RatePlanResource extends Resource
                     //->visible(fn ($record) => $record->country_restriction_type === 'exclude_only')
                     ->formatStateUsing(fn ($record) => $record->getExcludedCountriesCount() . ' countries')
                     ->tooltip(function ($record) {
-                        if (!$record->excluded_countries || count($record->excluded_countries) === 0) {
+                        $countries = $record->excluded_countries;
+                        
+                        if (!$countries) {
                             return 'No countries selected';
                         }
                         
-                        $countries = collect($record->excluded_countries)
-                            ->map(fn ($code) => RatePlan::getCountriesList()[$code] ?? $code)
-                            ->take(10)
-                            ->join(', ');
-                            
-                        $more = count($record->excluded_countries) > 10 
-                            ? '... and ' . (count($record->excluded_countries) - 10) . ' more' 
-                            : '';
-                            
-                        return $countries . $more;
+                        // Handle string values (single country)
+                        if (is_string($countries) && !in_array($countries, ['', '[]', 'null'])) {
+                            return RatePlan::getCountriesList()[$countries] ?? $countries;
+                        }
+                        
+                        // Handle array values
+                        if (is_array($countries) && !empty($countries)) {
+                            $countryNames = collect($countries)
+                                ->map(fn ($code) => RatePlan::getCountriesList()[$code] ?? $code)
+                                ->take(10)
+                                ->join(', ');
+                                
+                            $more = count($countries) > 10 
+                                ? '... and ' . (count($countries) - 10) . ' more' 
+                                : '';
+                                
+                            return $countryNames . $more;
+                        }
+                        
+                        return 'No countries selected';
                     }),
                     
                 Tables\Columns\TextColumn::make('created_at')
@@ -312,6 +341,16 @@ class RatePlanResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('duplicate')
+                    ->label('Duplicate')
+                    ->icon('heroicon-m-square-2-stack')
+                    ->color('gray')
+                    ->action(function (RatePlan $record): void {
+                        $newRatePlan = $record->replicate();
+                        $newRatePlan->name = $record->name . ' (Copy)';
+                        $newRatePlan->active = false;
+                        $newRatePlan->save();
+                    }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -434,30 +473,12 @@ class RatePlanResource extends Resource
                         Infolists\Components\TextEntry::make('applicable_countries')
                             ->label('Available In Countries')
                             ->visible(fn ($record) => $record->country_restriction_type === 'include_only')
-                            ->bulleted()
-                            ->formatStateUsing(function ($state) {
-                                if (!$state || count($state) === 0) {
-                                    return ['No countries selected'];
-                                }
-                                
-                                return collect($state)
-                                    ->map(fn ($code) => RatePlan::getCountriesList()[$code] ?? $code)
-                                    ->toArray();
-                            }),
+                            ->formatStateUsing(fn ($state, $record) => $record->getApplicableCountriesNames()),
                             
                         Infolists\Components\TextEntry::make('excluded_countries')
                             ->label('Excluded Countries')
                             ->visible(fn ($record) => $record->country_restriction_type === 'exclude_only')
-                            ->bulleted()
-                            ->formatStateUsing(function ($state) {
-                                if (!$state || count($state) === 0) {
-                                    return ['No countries selected'];
-                                }
-                                
-                                return collect($state)
-                                    ->map(fn ($code) => RatePlan::getCountriesList()[$code] ?? $code)
-                                    ->toArray();
-                            }),
+                            ->formatStateUsing(fn ($state, $record) => $record->getExcludedCountriesNames()),
                     ])
                     ->columns(1),
                     
